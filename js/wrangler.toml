@@ -1,0 +1,18 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "unifi-cloudflare-ddns"
+main = "src/index.js"
+compatibility_date = "2024-08-21"
+compatibility_flags = ["nodejs_compat"]
+
+workers_dev = false
+
+routes = [
+    { pattern = "ddns.crappyengineering.com", zone_name = "crappyengineering.com", custom_domain = true }
+]
+
+[placement]
+mode = "smart"
+
+[vars]
+#BASIC_AUTH_USER = "crappyengineering.com"
+BASIC_AUTH_USER = "unifi-ddns"

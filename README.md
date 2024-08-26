@@ -1,6 +1,6 @@
 # Cloudflare DDNS for UniFi OS
 
-A Cloudflare Worker script that provides a UniFi-compatible DDNS API to dynamically update the IP address of a DNS A record.
+A Cloudflare Worker script that strives to provides a UniFi-compatible DDNS API to dynamically update the IP address of a DNS A record.
 
 ## Why?
 
@@ -12,7 +12,7 @@ Ensure you have a Cloudflare account and your domain is configured to point to C
 
 #### Install With Click To Deploy
 
-1. Deploy the Worker: [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/workerforce/unifi-ddns)
+1. Deploy the Worker: [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/frehov/unifi-ddns-cf-worker/tree/main/js)
 2. Navigate to the Cloudflare Workers dashboard.
 3. After deployment, note the `\*.workers.dev` route.
 4. Create an API token to update DNS records: 
@@ -20,14 +20,26 @@ Ensure you have a Cloudflare account and your domain is configured to point to C
    - Click "Create token", select "Create Custom Token".
    - Choose **Zone:DNS:Edit** for permissions, and include your zone under "Zone Resources". 
    - Copy your API Key for later use in UniFi OS Controller configuration.
+   - Store the API key encrypted in the worker environment as CF_API_KEY
 
 #### Install With Wrangler CLI
 
 1. Clone or download this project.
 2. Ensure you have [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) installed.
-3. Log in with Wrangler and run `wrangler deploy`.
-4. Note the `\*.workers.dev` route after creation.
+3. Log in with Wrangler and run `wrangler deploy` from the js subfolder.
+4. ~~Note the `\*.workers.dev` route after creation.~~ This route has been disabled, update with your own custom domain if you have one.
 5. Create an API token as described above.
+6. Create secrets either with `wrangler secrets put` or directly in the workers page
+   1. CF_API_KEY: Set to the previously created api token
+   2. BASIC_USER_PASSWORD: Set to a unique long password, not the token above.
+
+#### Local development with Wrangler CLI
+
+1. Create the `.dev.vars` file alongside the wrangler.toml, with the following secrets to mimic the encrypted secrets in the worker
+   1. CF_API_KEY
+   2. BASIC_USER_PASSWORD 
+2. run `pnpm --filter js run dev` to start the dev server on localhost:8787
+3. 
 
 ### Configuring UniFi OS
 
@@ -36,9 +48,9 @@ Ensure you have a Cloudflare account and your domain is configured to point to C
 3. Click **Create New Dynamic DNS** and provide:
    - `Service`: Choose `custom` or `dyndns`.
    - `Hostname`: Full subdomain and hostname to update (e.g., `subdomain.mydomain.com` or `mydomain.com` for root domain).
-   - `Username`: Domain name containing the record (e.g., `mydomain.com`).
-   - `Password`: Cloudflare API Token.
-   - `Server`: Cloudflare Worker route `<worker-name>.<worker-subdomain>.workers.dev/update?ip=%i&hostname=%h`.
+   - `Username`: Authorized users username, currently `unifi-ddns`
+   - `Password`: Authorised user password.
+   - `Server`: Cloudflare Worker route `<custom-domain>/update?ip=%i&hostname=%h`.
      - For older UniFi devices, omit the URL path.
      - Remove `https://` from the URL.
 
@@ -62,5 +74,5 @@ To test the configuration and force an update on a USG:
 
 #### Important Notes!
 
-- For subdomains (`sub.example.com`), create an A record manually in Cloudflare dashboard first.
+- ~~For subdomains (`sub.example.com`), create an A record manually in Cloudflare dashboard first.~~
 - If you encounter a hostname resolution error (`inadyn[2173778]: Failed resolving hostname https: Name or service not known`), remove `https://` from the `Server` field.

@@ -1,0 +1,20 @@
+{
+  "name": "unifi-ddns-cf-worker",
+  "version": "1.0.0",
+  "description": "",
+  "private": "true",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "unifi",
+    "ddns",
+    "dyndns"
+  ],
+  "devDependencies": {
+    "cloudflare": "^3.5.0",
+    "wrangler": "^3.72.2"
+  }
+}
