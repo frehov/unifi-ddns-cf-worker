@@ -14,8 +14,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
-        working-directory: ./js
         with:
           packageManager: pnpm
+          workingDirectory: ./js
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
