@@ -13,6 +13,11 @@ routes = [
 [placement]
 mode = "smart"
 
+[observability]
+enabled = true
+head_sampling_rate = 0.05 # optional. default = 1.
+invocation_logs = true
+
 [vars]
 #BASIC_AUTH_USER = "crappyengineering.com"
 BASIC_AUTH_USER = "unifi-ddns"

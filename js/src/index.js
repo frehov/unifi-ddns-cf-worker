@@ -61,7 +61,7 @@ class Cloudflare {
 		return body.result
 	}
 
-	async updateRecord(record, value, proxied = false) {
+	async updateRecord(zone, record, value, proxied = false) {
 		const update = {
 			content: value,
 			name: record.name,
@@ -69,7 +69,7 @@ class Cloudflare {
 			type: record.type
 		}
 		const response = await this._fetchWithToken(
-			`zones/${record.zone_id}/dns_records/${record.id}`,
+			`zones/${zone.id}/dns_records/${record.id}`,
 			{
 				method: "PATCH",
 				body: JSON.stringify(update),
@@ -199,10 +199,11 @@ async function informAPI(cloudflare, hostnames, ip, proxied) {
 		}
 
 		const zone = zones.get(domainName);
+		
 		await cloudflare.findRecord(zone, hostname, isIPV4)
 			.then(
 				// Update record if it's present
-				async (record) => await cloudflare.updateRecord(record, ip, proxied),
+				async (record) => await cloudflare.updateRecord(zone, record, ip, proxied),
 				// Create record if it doesn't exist
 				async (_err) => await cloudflare.createRecord(zone, hostname, ip, isIPV4, proxied)
 			)
