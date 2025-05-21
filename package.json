@@ -14,7 +14,7 @@
     "dyndns"
   ],
   "devDependencies": {
-    "cloudflare": "^3.5.0",
-    "wrangler": "^3.72.2"
+    "cloudflare": "^4.3.0",
+    "wrangler": "^4.16.0"
   }
 }
